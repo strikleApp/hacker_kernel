@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hacker_kernel/constants/color.dart';
+import 'package:hacker_kernel/constants/shared_prefs_keys.dart';
 import 'package:hacker_kernel/entity/product.dart';
 import 'package:hacker_kernel/repository/provider_function.dart';
 import 'package:hacker_kernel/screens/add_product_screen.dart';
+import 'package:hacker_kernel/screens/login_screen.dart';
 import 'package:hacker_kernel/widgets/product_card.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -117,6 +120,17 @@ class HomeScreen extends StatelessWidget {
                   ),
             SizedBox(
               height: 10,
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                await prefs.remove(kToken);
+                if (context.mounted) {
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => LoginScreen()));
+                }
+              },
+              child: Text("Logout"),
             ),
           ],
         ),
