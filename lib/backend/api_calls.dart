@@ -28,11 +28,11 @@ class ApiCalls {
         final responseData = jsonDecode(response.body);
         print("Login successful: $responseData");
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString(kToken, responseData['token']);
+        await prefs.setString(kToken, jsonEncode(responseData['token']));
         return true;
       } else {
         print("Login failed: ${response.statusCode} - ${response.body}");
-        Map errorMap = jsonDecode(response.body);
+        Map<String, dynamic> errorMap = jsonDecode(response.body);
 
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(

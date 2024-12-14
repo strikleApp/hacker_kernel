@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hacker_kernel/constants/shared_prefs_keys.dart';
+import 'package:hacker_kernel/repository/provider_function.dart';
 import 'package:hacker_kernel/screens/home_screen.dart';
 import 'package:hacker_kernel/screens/login_screen.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -16,17 +18,21 @@ late SharedPreferences prefs;
 late Future<void> getFuture;
 String token = "";
 
-Future<void> getInitial() async {
-  try {
-    prefs = await SharedPreferences.getInstance();
-    token = prefs.getString(kToken) ?? "";
-    await Future.delayed(Duration(seconds: 2));
-  } catch (e) {
-    print(e);
-  }
-}
-
 class _SplashScreenState extends State<SplashScreen> {
+  Future<void> getInitial() async {
+    try {
+      prefs = await SharedPreferences.getInstance();
+      token = prefs.getString(kToken) ?? '';
+      if (mounted) {
+        await Provider.of<ProviderFunction>(context, listen: false)
+            .getAllProducts();
+      }
+      await Future.delayed(Duration(seconds: 2));
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -67,7 +73,6 @@ class _SplashScreenState extends State<SplashScreen> {
         } else if (token.isNotEmpty) {
           return const HomeScreen();
         } else {
-          ///TODO:
           return LoginScreen();
         }
       },

@@ -1,7 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:hacker_kernel/entity/product.dart';
+import 'package:hacker_kernel/functions/image_functions.dart';
+import 'package:hacker_kernel/repository/provider_function.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class AddProductScreen extends StatefulWidget {
   const AddProductScreen({super.key});
@@ -12,8 +16,8 @@ class AddProductScreen extends StatefulWidget {
 
 class AddProductScreenState extends State<AddProductScreen> {
   final _formKey = GlobalKey<FormState>();
-  String? _productName;
-  String? _price;
+  final TextEditingController _productNameController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
   XFile? _image;
 
   final ImagePicker _picker = ImagePicker();
@@ -26,14 +30,43 @@ class AddProductScreenState extends State<AddProductScreen> {
     });
   }
 
-  void _submitForm() {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      // Handle form submission (e.g., send data to server)
-      print('Product Name: $_productName');
-      print('Price: $_price');
-      print('Image Path: ${_image?.path}');
+  void _submitForm() async {
+    if (_image == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Please select an image"),
+        ),
+      );
+    } else if (_formKey.currentState!.validate()) {
+      String imagePath = _image!.path;
+      Product product = Product(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        name: _productNameController.text,
+        price: double.parse(_priceController.text),
+        imagePath: await convertImageToBase64(imagePath),
+      );
+
+      if (mounted) {
+        bool isAdded =
+            await Provider.of<ProviderFunction>(context, listen: false)
+                .addProduct(product: product, context: context);
+
+        if (isAdded) {
+          _productNameController.clear();
+          _priceController.clear();
+          setState(() {
+            _image = null; // Clear the image
+          });
+        }
+      }
     }
+  }
+
+  @override
+  void dispose() {
+    _productNameController.dispose();
+    _priceController.dispose();
+    super.dispose();
   }
 
   @override
@@ -77,6 +110,7 @@ class AddProductScreenState extends State<AddProductScreen> {
               SizedBox(height: 16),
               // Product Name Input
               TextFormField(
+                controller: _productNameController,
                 decoration: InputDecoration(
                   labelText: 'Product Name',
                   border: OutlineInputBorder(),
@@ -87,13 +121,11 @@ class AddProductScreenState extends State<AddProductScreen> {
                   }
                   return null;
                 },
-                onSaved: (value) {
-                  _productName = value;
-                },
               ),
               SizedBox(height: 16),
               // Price Input
               TextFormField(
+                controller: _priceController,
                 decoration: InputDecoration(
                   labelText: 'Price',
                   border: OutlineInputBorder(),
@@ -107,9 +139,6 @@ class AddProductScreenState extends State<AddProductScreen> {
                     return 'Please enter a valid number';
                   }
                   return null;
-                },
-                onSaved: (value) {
-                  _price = value;
                 },
               ),
               SizedBox(height: 20),

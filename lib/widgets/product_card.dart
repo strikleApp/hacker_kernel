@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hacker_kernel/constants/color.dart';
+import 'package:hacker_kernel/functions/image_functions.dart';
 
 class ProductCard extends StatelessWidget {
   final String imageUrl;
@@ -32,8 +33,8 @@ class ProductCard extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                  child: Image.asset(
-                    imageUrl,
+                  child: Image.memory(
+                    convertBase64ToImage(imageUrl),
                     width: MediaQuery.sizeOf(context).width * 0.4,
                     height: MediaQuery.sizeOf(context).height * 0.18,
                     fit: BoxFit.contain,

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hacker_kernel/constants/color.dart';
+import 'package:hacker_kernel/entity/product.dart';
+import 'package:hacker_kernel/repository/provider_function.dart';
 import 'package:hacker_kernel/screens/add_product_screen.dart';
-import 'package:hacker_kernel/widgets/accessories_card.dart';
 import 'package:hacker_kernel/widgets/product_card.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -11,6 +13,8 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<Product> listOfProduct =
+        Provider.of<ProviderFunction>(context).productList;
     return Scaffold(
       appBar: _buildAppBar(),
       floatingActionButton: FloatingActionButton(
@@ -19,130 +23,102 @@ class HomeScreen extends StatelessWidget {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => AddProductScreen()));
           }),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            spacing: 10,
-            children: [
-              SizedBox(
-                height: 10,
-              ),
-              Text(
-                "Hi-Fi Shop & Service",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Text(
-                "Audio shop on Rustaveli Ave 57.",
-                style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 15,
-                    color: subtitleTextColor),
-              ),
-              Text(
-                "This shop offers both products and services.",
-                style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 15,
-                    color: subtitleTextColor),
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              Row(
-                spacing: 5,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    "Products",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-                  ),
-                  Text(
-                    "$count",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 25,
-                        color: subtitleTextColor),
-                  ),
-                  Expanded(child: Container()),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      "Show all",
-                      style: TextStyle(color: primaryColor),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              SizedBox(
-                height: MediaQuery.sizeOf(context).height * 0.24,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 10,
-                  itemBuilder: (context, index) {
-                    return ProductCard(
-                      imageUrl: "assets/login.png",
-                      title: "Headphone",
-                      price: "477",
-                      onDelete: () {},
-                    );
-                  },
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: ListView(
+          children: [
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              "Hi-Fi Shop & Service",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            Text(
+              "Audio shop on Rustaveli Ave 57.",
+              style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 15,
+                  color: subtitleTextColor),
+            ),
+            Text(
+              "This shop offers both products and services.",
+              style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 15,
+                  color: subtitleTextColor),
+            ),
+            SizedBox(
+              height: 16,
+            ),
+            Row(
+              spacing: 5,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "Products",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
                 ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Row(
-                spacing: 5,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    "Accessories",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-                  ),
-                  Text(
-                    "$count",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 25,
-                        color: subtitleTextColor),
-                  ),
-                  Expanded(child: Container()),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      "Show all",
-                      style: TextStyle(color: primaryColor),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: MediaQuery.sizeOf(context).height * 0.27,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 10,
-                  itemBuilder: (context, index) {
-                    return AccessoriesCard(
-                      isAvailable: index % 2 == 0 ? true : false,
-                      imageUrl: "assets/login.png",
-                      title: "Headphone",
-                      price: "477",
-                      onDelete: () {},
-                    );
-                  },
+                Text(
+                  "${listOfProduct.length}",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 25,
+                      color: subtitleTextColor),
                 ),
-              ),
-            ],
-          ),
+                Expanded(child: Container()),
+                TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    "Show all",
+                    style: TextStyle(color: primaryColor),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            listOfProduct.isEmpty
+                ? Container(
+                    alignment: Alignment.center,
+                    height: MediaQuery.sizeOf(context).height * 0.3,
+                    child: Text(
+                      "No Product Found!",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  )
+                : GridView.builder(
+                    physics: ScrollPhysics(),
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.75,
+                      crossAxisSpacing: 8.0,
+                      mainAxisSpacing: 8.0,
+                    ),
+                    itemCount: listOfProduct.length,
+                    itemBuilder: (context, index) {
+                      Product product = listOfProduct[index];
+                      return ProductCard(
+                        imageUrl: product.imagePath,
+                        title: product.name,
+                        price: product.price.toString(),
+                        onDelete: () {
+                          Provider.of<ProviderFunction>(context, listen: false)
+                              .removeProduct(product: product);
+                        },
+                      );
+                    },
+                  ),
+            SizedBox(
+              height: 10,
+            ),
+          ],
         ),
       ),
     );
