@@ -4,12 +4,20 @@ import 'package:hacker_kernel/constants/color.dart';
 import 'package:hacker_kernel/screens/home_screen.dart';
 import 'package:hacker_kernel/widgets/password_field.dart';
 
-class LoginScreen extends StatelessWidget {
-  LoginScreen({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
+
   final TextEditingController passwordController = TextEditingController();
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -18,84 +26,101 @@ class LoginScreen extends StatelessWidget {
       body: Form(
         key: _formKey,
         child: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                spacing: 20,
-                children: [
+          child: AbsorbPointer(
+            absorbing: isLoading,
+            child: Stack(
+              children: [
+                if (isLoading)
                   Center(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Image.asset(
-                        "assets/login.png",
-                        height: MediaQuery.sizeOf(context).height * 0.3,
-                        fit: BoxFit.cover,
-                      ),
+                    child: CircularProgressIndicator(),
+                  ),
+                SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      spacing: 20,
+                      children: [
+                        Center(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Image.asset(
+                              "assets/login.png",
+                              height: MediaQuery.sizeOf(context).height * 0.3,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          "Login",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 30,
+                            color: onSecondary,
+                          ),
+                        ),
+                        _buildEmailTextFormField(),
+                        PasswordTextField(
+                            controller: passwordController,
+                            primaryColor: primaryColor),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: TextButton(
+                            onPressed: () {},
+                            child: Text(
+                              "Forget password?",
+                            ),
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              setState(() {
+                                isLoading = true;
+                              });
+                              ApiCalls apiCalls = ApiCalls();
+                              bool isSuccessful = await apiCalls.login(
+                                  email: emailController.text,
+                                  password: passwordController.text,
+                                  context: context);
+                              if (context.mounted) {
+                                isSuccessful
+                                    ? Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => HomeScreen(),
+                                        ),
+                                      )
+                                    : null;
+                              }
+                              setState(() {
+                                isLoading = false;
+                              });
+                            }
+                          },
+                          child: Text(
+                            'Login',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ),
+                        _buildOrDivider(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("New to Logistics?"),
+                            TextButton(
+                              onPressed: () {},
+                              child: Text("Register"),
+                            ),
+                          ],
+                        )
+                      ],
                     ),
                   ),
-                  Text(
-                    "Login",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30,
-                      color: onSecondary,
-                    ),
-                  ),
-                  _buildEmailTextFormField(),
-                  PasswordTextField(
-                      controller: passwordController,
-                      primaryColor: primaryColor),
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        "Forget password?",
-                      ),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        ApiCalls apiCalls = ApiCalls();
-                        bool isSuccessful = await apiCalls.login(
-                            email: emailController.text,
-                            password: passwordController.text,
-                            context: context);
-                        if (context.mounted) {
-                          isSuccessful
-                              ? Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => HomeScreen(),
-                                  ),
-                                )
-                              : null;
-                        }
-                      }
-                    },
-                    child: Text(
-                      'Login',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ),
-                  _buildOrDivider(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("New to Logistics?"),
-                      TextButton(
-                        onPressed: () {},
-                        child: Text("Register"),
-                      ),
-                    ],
-                  )
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

@@ -16,6 +16,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => ProviderFunction(),
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Hacker Kernel',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: primaryColor),

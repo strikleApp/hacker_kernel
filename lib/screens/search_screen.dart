@@ -96,31 +96,40 @@ class SearchScreenState extends State<SearchScreen> {
           ),
         ),
       ),
-      body: GridView.builder(
-        physics: ScrollPhysics(),
-        shrinkWrap: true,
-        scrollDirection: Axis.vertical,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 0.75,
-          crossAxisSpacing: 8.0,
-          mainAxisSpacing: 8.0,
-        ),
-        itemCount: filteredProducts.length,
-        // Use filtered products count
-        itemBuilder: (context, index) {
-          Product product = filteredProducts[index];
-          return ProductCard(
-            imageUrl: product.imagePath,
-            title: product.name,
-            price: product.price.toString(),
-            onDelete: () {
-              Provider.of<ProviderFunction>(context, listen: false)
-                  .removeProduct(product: product);
-            },
-          );
-        },
-      ),
+      body: listOfProduct.isEmpty
+          ? Container(
+              alignment: Alignment.center,
+              height: MediaQuery.sizeOf(context).height * 0.3,
+              child: Text(
+                "No Product Found!",
+                style: TextStyle(fontSize: 20),
+              ),
+            )
+          : GridView.builder(
+              physics: ScrollPhysics(),
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 0.75,
+                crossAxisSpacing: 8.0,
+                mainAxisSpacing: 8.0,
+              ),
+              itemCount: filteredProducts.length,
+              // Use filtered products count
+              itemBuilder: (context, index) {
+                Product product = filteredProducts[index];
+                return ProductCard(
+                  imageUrl: product.imagePath,
+                  title: product.name,
+                  price: product.price.toString(),
+                  onDelete: () {
+                    Provider.of<ProviderFunction>(context, listen: false)
+                        .removeProduct(product: product);
+                  },
+                );
+              },
+            ),
     );
   }
 }
