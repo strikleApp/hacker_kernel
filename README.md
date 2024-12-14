@@ -81,19 +81,6 @@ This is a Flutter-based mobile application that allows users to manage a list of
 3. Support for product sorting and filtering.
 4. Integration with a cloud database for centralized storage.
 
-## Screenshots
-
-1. **Main Product List Screen:**
-   Displays the list of all products with a logout button.
-
-2. **Search Screen:**
-   Provides a real-time product search experience.
-
-3. **Product Creation Screen:**
-   Allows users to add new products with ease.
-
-> **Note:** Add screenshots to the `assets` folder and link them here.
-
 ## Author
 
 Aashish Kumar\
