@@ -14,8 +14,24 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Hacker Kernel',
       theme: ThemeData(
-        colorScheme: kColorScheme,
-        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(seedColor: primaryColor),
+        scaffoldBackgroundColor: Color(0xffffffff),
+        appBarTheme: AppBarTheme(
+          color: Color(0xffffffff),
+          surfaceTintColor: Color(0xffffffff),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ButtonStyle(
+            shape: WidgetStatePropertyAll(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            minimumSize: WidgetStatePropertyAll(Size(25, 55)),
+            backgroundColor: WidgetStatePropertyAll(primaryColor),
+            foregroundColor: WidgetStatePropertyAll(secondaryColor),
+          ),
+        ),
       ),
       home: const SplashScreen(),
     );

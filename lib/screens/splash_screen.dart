@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hacker_kernel/constants/shared_prefs_keys.dart';
 import 'package:hacker_kernel/screens/home_screen.dart';
+import 'package:hacker_kernel/screens/login_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -12,10 +14,16 @@ class SplashScreen extends StatefulWidget {
 late SharedPreferences prefs;
 
 late Future<void> getFuture;
+String token = "";
 
 Future<void> getInitial() async {
-  prefs = await SharedPreferences.getInstance();
-  await Future.delayed(Duration(seconds: 2));
+  try {
+    prefs = await SharedPreferences.getInstance();
+    token = prefs.getString(kToken) ?? "";
+    await Future.delayed(Duration(seconds: 2));
+  } catch (e) {
+    print(e);
+  }
 }
 
 class _SplashScreenState extends State<SplashScreen> {
@@ -48,7 +56,6 @@ class _SplashScreenState extends State<SplashScreen> {
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Colors.blue,
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -57,8 +64,11 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
           );
-        } else {
+        } else if (token.isNotEmpty) {
           return const HomeScreen();
+        } else {
+          ///TODO:
+          return LoginScreen();
         }
       },
     );
