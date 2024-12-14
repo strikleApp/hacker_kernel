@@ -5,6 +5,7 @@ import 'package:hacker_kernel/entity/product.dart';
 import 'package:hacker_kernel/repository/provider_function.dart';
 import 'package:hacker_kernel/screens/add_product_screen.dart';
 import 'package:hacker_kernel/screens/login_screen.dart';
+import 'package:hacker_kernel/screens/search_screen.dart';
 import 'package:hacker_kernel/widgets/product_card.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,7 +20,7 @@ class HomeScreen extends StatelessWidget {
     List<Product> listOfProduct =
         Provider.of<ProviderFunction>(context).productList;
     return Scaffold(
-      appBar: _buildAppBar(),
+      appBar: _buildAppBar(context),
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
           onPressed: () {
@@ -138,7 +139,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  AppBar _buildAppBar() {
+  AppBar _buildAppBar(BuildContext context) {
     return AppBar(
       leading: Row(
         children: [
@@ -182,7 +183,10 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
           ),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => SearchScreen()));
+          },
           child: Icon(
             Icons.search,
             size: 22,

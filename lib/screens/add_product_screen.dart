@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:hacker_kernel/constants/color.dart';
 import 'package:hacker_kernel/entity/product.dart';
 import 'package:hacker_kernel/functions/image_functions.dart';
 import 'package:hacker_kernel/repository/provider_function.dart';
@@ -73,6 +74,35 @@ class AddProductScreenState extends State<AddProductScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: Row(
+          children: [
+            SizedBox(
+              width: 6,
+            ),
+            ElevatedButton(
+              style: ButtonStyle(
+                elevation: WidgetStatePropertyAll(0),
+                backgroundColor: WidgetStatePropertyAll(cardColor),
+                padding: WidgetStatePropertyAll(
+                  EdgeInsets.all(15),
+                ),
+                shape: WidgetStatePropertyAll(
+                  RoundedRectangleBorder(
+                    side: BorderSide(width: 0, color: Colors.grey.shade400),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                ),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Icon(
+                Icons.arrow_back_ios_new_rounded,
+                size: 20,
+              ),
+            ),
+          ],
+        ),
         title: Text('Add Product'),
       ),
       body: Padding(
