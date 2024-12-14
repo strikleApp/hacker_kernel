@@ -55,7 +55,7 @@ class AddProductScreenState extends State<AddProductScreen> {
           _productNameController.clear();
           _priceController.clear();
           setState(() {
-            _image = null; // Clear the image
+            _image = null;
           });
         }
       }
@@ -116,7 +116,7 @@ class AddProductScreenState extends State<AddProductScreen> {
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) {
-                  if (value == null || value.isEmpty) {
+                  if (value == null || value.trim().isEmpty) {
                     return 'Please enter a product name';
                   }
                   return null;
@@ -132,7 +132,7 @@ class AddProductScreenState extends State<AddProductScreen> {
                 ),
                 keyboardType: TextInputType.number,
                 validator: (value) {
-                  if (value == null || value.isEmpty) {
+                  if (value == null || value.trim().isEmpty) {
                     return 'Please enter a price';
                   }
                   if (double.tryParse(value) == null) {
