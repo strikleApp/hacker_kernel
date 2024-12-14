@@ -85,8 +85,3 @@ This is a Flutter-based mobile application that allows users to manage a list of
 
 Aashish Kumar\
 [LinkedIn](https://linkedin.com/in/aashish05kumar) | [GitHub](https://github.com/strikleApp)
-
----
-
-Thank you for using the Product Management App! Feel free to contribute or suggest improvements.
-
