@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hacker_kernel/backend/api_calls.dart';
 import 'package:hacker_kernel/constants/color.dart';
 import 'package:hacker_kernel/screens/home_screen.dart';
-import 'package:hacker_kernel/widgets/passwordField.dart';
+import 'package:hacker_kernel/widgets/password_field.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
